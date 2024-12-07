@@ -9,26 +9,19 @@ export class Home extends Component {
     return (
 
 <body>
-    
-        <div className="header">
-            <h1>Undisclosed Wetness Measurer</h1>
-        </div>
-   
-
-    <div class="container">
-        
-
-        <section class="cta">
-            <a href="/upload-image" class="cta-button">Get Started Now!</a>
-        </section>
+    <div className="header">
+        <h1>Undisclosed Wetness Measurer</h1>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>UWM Group of Innovation</p>
-        </div>
-    </footer>
+    <div className="imagecontainer">
+        <img src="/home_page_logo.png" alt="logo" style={{ width: 250, height: 250 }} />
+
+        <section className="cta">
+            <a href="/upload-image" className="cta-button">Get Started Now!</a>
+        </section>
+    </div>
 </body>
+
     );
   }
 }

@@ -29,25 +29,8 @@ export class Result extends Component {
 
     static backToUploadPage() {
         return (
-            // <a href="/upload-image" className="btn btn-primary rounded-pill px-2 py-1 text-white">
-            //     <div style = {{textalign: 'center'}}
-            //         Upload Image
-            //     </div>
-            // </a>
-            <a
-                    href="/upload-image"
-                    className="btn btn-primary rounded-pill px-2 py-1 text-white"
-                    style={{
-                        display: 'flex',           // Enables flexbox
-                        justifyContent: 'center',  // Centers text horizontally
-                        alignItems: 'center',      // Centers text vertically
-                        padding: '10px 20px',      // Adjust padding if necessary
-                        height: 'auto',            // Ensures the button adjusts to content height
-                        textDecoration: 'none',    // Removes any default underline
-                        textAlign: 'center',       // Ensures proper text alignment
-                      }}
-                    >
-                    Upload Image
+            <a href="/upload-image" className="cta-button">
+                Back To Upload
             </a>
 
         );
