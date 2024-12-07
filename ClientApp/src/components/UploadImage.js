@@ -73,7 +73,7 @@ export class UploadImage extends Component {
 
   render() {
     let message = this.state.message;
-    let resultId = this.state.resultId;
+    // let resultId = this.state.resultId;
     let contents = <></>;
 
     switch (message) {
