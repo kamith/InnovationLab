@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './labels.css'
 
 export function DisplayImage({ img }) {
@@ -16,14 +16,6 @@ export function DisplayImage({ img }) {
         maxWidth: "100%",
         height: "auto",
         borderRadius: "16px",
-    };
-
-    const containerMobileStyle = {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
     };
 
     // Use a media query to determine which styles to apply

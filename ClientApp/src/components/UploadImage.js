@@ -70,24 +70,6 @@ export class UploadImage extends Component {
     this.webcamRef = React.createRef();
   }
 
-  render() {
-    let message = this.state.message;
-    let resultId = this.state.resultId;
-    let contents = UploadImage.renderUploadImage(this);
-
-    return (
-      <div>
-        <div style={{width: "45%", margin: "auto"}}>
-          <div style={{marginBottom: "15%"}}>
-            { message }
-          </div>
-          { contents }
-          <ResultsButton id={resultId} />
-        </div>
-      </div>
-    );
-  }
-
   handlePhoto = (imageSrc) => {
     this.setState({ 
       showCamera: false,
