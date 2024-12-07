@@ -219,7 +219,7 @@ export class UploadImage extends Component {
                 screenshotFormat='image/jpeg'
                 mirrored={false}
                 style={{width: "150%"}}
-                videoConstraints={{...videoConstraints}}
+                facingMode="environment"
               />
             </div>
             <div style={{gap: "10px", display: "flex", justifyContent: "center"}} className='cta'>
