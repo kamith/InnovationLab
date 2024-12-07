@@ -18,7 +18,7 @@ export class History extends Component {
         this.loadImages();
     }
 
-    static displayImageArray(obj, images) {
+    static displayImageArray(images) {
         // sort images
         images.sort((x, y) => {
             const d1 = new Date(x.DateUploaded);
@@ -34,11 +34,34 @@ export class History extends Component {
                     images.map((image, i) => {
                         i++;
                         return (
-                            <a key={i} href={`/result/${i}`} style={{color: "black"}}>
-                                <div className="hover" style={{display: "inline-block", border: "2px black solid", borderRadius: "4px", padding: "1%", marginBottom: "1em", marginRight: "1em"}}>
-                                    <p>Date Uploaded: { image.DateUploaded }</p>
-                                    <p>Liquid Amount: { image.LiquidAmount } ml</p>
-                                    <DisplayImage img={image.ImageSrc} />
+                            <a key={i} href={`/result/${i}/false`} style={{color: "black"}}>
+                                <div className="hover" style={{display: "inline-block", border: "2px black solid", borderRadius: "16px", padding: "1%", marginBottom: "1em", marginRight: "1em"}}>
+                                    <div style={{ marginBottom: "0.5em", display: "flex", alignItems: "center" }}>
+                                        <span className="labels">Date Uploaded:</span>
+                                        <span> { image.DateUploaded}</span>
+                                    </div>
+                                    {/* <DisplayImage img={image.ImageSrc} /> */}
+                                            {/* <DisplayImage
+                                                //  src={image.ImageSrc}
+                                                
+                                                img={image.ImageSrc}
+                                                style={{
+                                                    maxHeight: 350,
+                                                    maxWidth: 350,
+                                                    borderRadius: "16px",  
+                                                }}
+                                                alt="Result"
+                                                
+                                            /> */}
+                                    <DisplayImage
+                                        img={image.ImageSrc}
+                                        style={{
+                                            maxHeight: 350,
+                                            maxWidth: 350,
+                                            borderRadius: "16px", // This will now work
+                                        }}
+                                        alt="Result"
+                            />
                                 </div>    
                             </a>
                         );
@@ -53,19 +76,36 @@ export class History extends Component {
         let images = <></>
         switch(message) {
             case Successful:
-                images = History.displayImageArray(this, this.state.images);
+                images = History.displayImageArray(this.state.images);
                 break;
             default:
                 break;
 
         }
         return (
-            <div style={{display: "flex-col", margin: "auto"}}>
-                <h1>Result History</h1>
-                { message }
-                { images }
+            <div style={{
+                display: "flex",
+                flexDirection: "column", // Stack items vertically
+                alignItems: "center",    // Center items horizontally
+                justifyContent: "center", // Optional: center vertically
+                textAlign: "center",     // Center text inside elements
+                width: "100%",           // Ensure full-width container
+            }}>
+                <div
+        style={{
+            display: "flex",
+            flexWrap: "wrap",      // Wrap images if they overflow
+            justifyContent: "center", // Center images horizontally
+            gap: "1rem",          // Add spacing between images
+            width: "100%",        // Ensure images span the container width
+        }}
+    ></div>
+                    <h1 >Scan History</h1>
+                    {message}
+                    {images}
             </div>
         );
+        
     }
 
     async loadImages() {

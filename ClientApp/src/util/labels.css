@@ -1,0 +1,15 @@
+.labels{
+    display: inline-block; /* Ensures the box wraps only around the label */
+    background-color: #f0f8ff; /* Light blue background */
+    color: #333; /* Dark text color for contrast */
+    border: 1px solid #ccc; /* Subtle border */
+    border-radius: 12px; /* Rounded corners for the box */
+    padding: 4px 8px; /* Padding inside the box */
+    margin-right: 8px; /* Space between the box and the value */
+    font-size: 14px; /* Adjust font size */
+    font-weight: bold; /* Bold text for the label */
+}
+p {
+    margin: 0;
+    padding: 4px 0; 
+}  

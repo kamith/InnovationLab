@@ -6,8 +6,8 @@ import { ErrorCard } from '../util/cards';
 
 // Used to load custom result id
 export default function ResultWrapper() {
-    const { id } = useParams();
-    return <Result resultId={id} />;
+    const { id, isFromUpload } = useParams();
+    return <Result resultId={id} isFromUpload={isFromUpload} />;
 }
 
 const Unsuccessful = <ErrorCard message={"Couldn't retrieve result"} description={"Server error"} />
@@ -29,27 +29,58 @@ export class Result extends Component {
 
     static backToUploadPage() {
         return (
-            <div>
-                <a href="/upload-image"><button>Go back to upload page</button></a>
-            </div>
+            // <a href="/upload-image" className="btn btn-primary rounded-pill px-2 py-1 text-white">
+            //     <div style = {{textalign: 'center'}}
+            //         Upload Image
+            //     </div>
+            // </a>
+            <a
+                    href="/upload-image"
+                    className="btn btn-primary rounded-pill px-2 py-1 text-white"
+                    style={{
+                        display: 'flex',           // Enables flexbox
+                        justifyContent: 'center',  // Centers text horizontally
+                        alignItems: 'center',      // Centers text vertically
+                        padding: '10px 20px',      // Adjust padding if necessary
+                        height: 'auto',            // Ensures the button adjusts to content height
+                        textDecoration: 'none',    // Removes any default underline
+                        textAlign: 'center',       // Ensures proper text alignment
+                      }}
+                    >
+                    Upload Image
+            </a>
+
+        );
+    }
+    
+    static backToHistory() {
+        return (
+            <a href="/history" className="cta-button">
+                Back To History
+            </a>
         );
     }
 
     render() {
-        const uploadPageButton = Result.backToUploadPage();
-        const message = this.state.message;
-        const image = message === Successful ? <DisplayResult imageResult={this.state.imageResult} /> : <></>
-        return (
-            <div>
-                <h1>Result Page</h1>
-                { message }
-                <div style={{marginBottom: "1em"}}>
-                    { image }
+            let { isFromUpload } = this.props
+            isFromUpload = isFromUpload === "true";
+            const navButton = isFromUpload ? Result.backToUploadPage() : Result.backToHistory();
+            const message = this.state.message;
+            const image = message === Successful ? <DisplayResult imageResult={this.state.imageResult} /> : <></>
+
+            return (
+                <div style={{ position: "relative", padding: "1em", textAlign: 'center' }}>
+                    <h1>Result Page</h1>
+                    <div>{message}</div>
+                    <div style={{ marginBottom: "1em" }}>{image}</div>
+                    
+                    {/* Container for buttons */}
+                    <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                        <span style={{ textAlign: "right" }}>{navButton}</span>
+                    </div>
                 </div>
-                { uploadPageButton }
-            </div>
-        );
-    }
+            );
+        }
 
     async loadImageResult(id) {
         getImageResult(id).then((result) => {

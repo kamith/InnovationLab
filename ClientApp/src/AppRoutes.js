@@ -13,7 +13,7 @@ const AppRoutes = [
     element: <UploadImage />
   },
   {
-    path: '/result/:id',
+    path: '/result/:id/:isFromUpload',
     element: <ResultWrapper />
   },
   {

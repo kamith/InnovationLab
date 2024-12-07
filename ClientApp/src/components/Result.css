@@ -1,0 +1,12 @@
+.cta {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.cta-button {
+    background-color: #234b8d;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}

@@ -1,7 +1,20 @@
 ﻿a.navbar-brand {
   white-space: normal;
-  text-align: center;
+  text-align: left;
   word-break: break-all;
+}
+
+a.button {
+  text-decoration: none;
+  text-wrap: nowrap;
+  color: #234b8d;
+  padding: 10px;
+  align-items: center;
+}
+
+a.button:hover {
+  color: white;
+  background-color: #234b8d;
 }
 
 html {

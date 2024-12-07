@@ -1,34 +1,57 @@
 import React, { Component } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loading } from '../util/staticMessages';
-import { uploadImage } from '../util/images';
+import { getFileFromResponse, uploadImage } from '../util/images';
 import { ErrorCard, SuccessCard, WarningCard } from '../util/cards';
+import Webcam from 'react-webcam';
+import './UploadImage.css';
 
 // 10mb = 100,000,000 bytes, images must be <= this size
 const MaxImageSize = 100000000;
 
-// Display messages
-const ReadyToUpload = <h2>Upload an image</h2>
+const ReadyToUpload = (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      color: '#234b8d',
+      padding: '10px',
+      width: '100%',
+      textAlign: 'center', // Centers text in case of multiline content
+    }}
+  >
+    <h2 style={{ margin: 0 }}>Upload Image</h2>
+  </div>
+);
+
+
 const SuccessfulUpload = <SuccessCard message={"Image uploaded successfully!"} />
 const UnsuccessfulUpload = <ErrorCard message={"Image upload failed..."} description={"Server error"} />
 const ImageTooLargeError = 
-                            <div>
+                            <div style ={{display: 'flex', 
+                              justifyContent: 'center', 
+                              color: '#234b8d',
+                              alignItems: 'center', 
+                              width: '100%'}}>
                               <h2>Upload an image</h2>
                               <WarningCard message={"Image too large"} description={"Max image size 10 mb"} />
                             </div>
 
-const ResultsButton = ({ id }) => {
+const ResultsButton = ({ id, isFromUpload }) => {
   const navigate = useNavigate();
 
   function handleClick() {
-    return navigate(`/result/${id}`);
+    return navigate(`/result/${id}/${isFromUpload}`);
   }
 
   // Only display if id is greater than 0
   if(id <= 0) return <></>
 
   return (
-    <button onClick={handleClick}>View Result</button>
+    <div style={{marginTop: '10px', display: "flex", flexDirection: "column"}}>
+    <button className='cta-button' onClick={handleClick}>View Result</button>
+    </div>
   );
 }
 
@@ -37,12 +60,55 @@ export class UploadImage extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { message: ReadyToUpload, inputFile: null, resultId: 0 };
+    this.state = { 
+      message: ReadyToUpload, 
+      inputFile: null, 
+      resultId: 0,
+      modeInt: 0,
+      imageSrc: null
+    };
+    this.webcamRef = React.createRef();
   }
+
+  render() {
+    let message = this.state.message;
+    let resultId = this.state.resultId;
+    let contents = UploadImage.renderUploadImage(this);
+
+    return (
+      <div>
+        <div style={{width: "45%", margin: "auto"}}>
+          <div style={{marginBottom: "15%"}}>
+            { message }
+          </div>
+          { contents }
+          <ResultsButton id={resultId} />
+        </div>
+      </div>
+    );
+  }
+
+  handlePhoto = (imageSrc) => {
+    this.setState({ 
+      showCamera: false,
+      capturedImage: imageSrc,
+      inputFile: null  // Clear any previously selected file
+    });
+  }
+
+  resetForNewCapture = () => {
+    this.setState({
+      message: ReadyToUpload,
+      inputFile: null,
+      showCamera: true,
+      capturedImage: null
+    });
+  }
+
   
   static renderUploadImage(obj) {
 
-    function handleClick() {
+    function handleUploadClick() {
       if(obj.state.inputFile == null) return;
       const file = obj.state.inputFile;
       if(file == null) return;
@@ -69,22 +135,99 @@ export class UploadImage extends Component {
       }
     }
 
-    return (
-          <div style={{display: "flex", flexDirection: "column"}}>
-            <input onInput={handleInput} type="file" id="image" accept="image/*" />
-            <button onClick={handleClick}>Upload</button>
+    function handleGoBack() {
+      obj.setState({ modeInt: 0, inputFile: null });
+    }
+
+    if(obj.state.modeInt === 0) {
+      // haven't chosen file upload or camera
+      function cameraChoice() {
+        obj.setState({ modeInt: 1 });
+      }
+
+      function uploadChoice() {
+        obj.setState({ modeInt: 2});
+      }
+
+      return (
+        <div style={{display: "flex", gap: "10px", justifyContent: "center", width: "100%"}}>
+          <button onClick={cameraChoice} className='cta-button'>Take a photo</button>
+          <button onClick={uploadChoice} className='cta-button'>Upload a file</button>
+        </div>
+      );
+    } else if(obj.state.modeInt === 1) {
+      function capturePhoto() {
+        const imageSrc = obj.webcamRef.current.getScreenshot();
+        getFileFromResponse(imageSrc).then(blob => {
+          const file = new File([blob], "image");
+          obj.setState({ inputFile: file, imageSrc: imageSrc });
+        });
+      }
+
+      function retryPhoto() {
+        obj.setState({ inputFile: null });
+      }
+
+      // Camera is open
+      const capture = obj.state.inputFile === null
+                    ? <button onClick={capturePhoto} className='cta-button'>Capture</button>
+                    : <button className='cta-button' onClick={handleUploadClick}>Upload</button>
+
+      const retry = obj.state.inputFile === null
+                    ? <></>
+                    : <button onClick={retryPhoto} className='cta-button'>Retry</button>
+
+      if(obj.state.inputFile === null) {
+        return (
+          <div>
+            <button onClick={handleGoBack} style={{ marginBottom: "10%" }} className='cta-button'>Go back</button>
+            <Webcam
+            audio={false}
+            ref={obj.webcamRef}
+            screenshotFormat='image/jpeg'
+            mirrored={false}
+            style={{width: "150%"}}
+            />
+            <div style={{gap: "10px", display: "flex"}} className='cta'>
+              { capture }
+              { retry }
+            </div>
           </div>
-    );
-  }
+        );
+      } else {
+        return(
+          <div>
+            <img src={obj.state.imageSrc} alt="Uploaded" />
+            <div style={{gap: "10px", display: "flex"}} className='cta'>
+              { capture }
+              { retry }
+            </div>
+          </div>
+        );
+      }
+    } else if(obj.state.modeInt === 2) {
+      // file upload mode
+      const upload = obj.state.inputFile !== null
+                    ? <button className='cta-button' onClick={handleUploadClick}>Upload</button>
+                    : <></>
+      return (
+        <div>
+          <button onClick={handleGoBack} style={{ marginBottom: "10%" }} className='cta-button'>Go back</button>
+          <input style={{ marginBottom: "10%" }} onInput={handleInput} id="image" type="file" accept="image/*" />
+          { upload }
+        </div>
+      );
+    }
+  }  
 
   static renderSuccessfulUpload(obj) {
     function handleClick() {
-      obj.setState({ message: ReadyToUpload, inputFile: null });
+      obj.setState({ message: ReadyToUpload, inputFile: null,  modeInt: 0, resultId: 0 });
     }
 
     return (
       <div>
-        <button onClick={handleClick}>Upload Again</button>
+        <button className='cta-button' onClick={handleClick}>Upload Again</button>
       </div>
     );
   }
@@ -96,7 +239,7 @@ export class UploadImage extends Component {
 
     return (
       <div>
-        <button onClick={handleClick}>Retry</button>
+        <button className='cta-button' onClick={handleClick}>Retry</button>
       </div>
     );
   }
@@ -122,12 +265,14 @@ export class UploadImage extends Component {
     }
 
     return (
-      <div style={{width: "40%", margin: "auto"}}>
-        <div style={{marginBottom: "10px"}}>
-          { message }
+      <div>
+        <div style={{width: "45%", margin: "auto"}}>
+          <div style={{ marginBottom: "5%" }}>
+            { message }
+          </div>
+          { contents }
+          <ResultsButton id={resultId} isFromUpload={true} />
         </div>
-        { contents }
-        <ResultsButton id={resultId} />
       </div>
     );
   }
@@ -137,7 +282,7 @@ export class UploadImage extends Component {
     this.setState({ message: Loading });
     uploadImage(img).then(x => {
       if(x === -1) throw new Error();
-      this.setState({ message: SuccessfulUpload, resultId: x });
+      this.setState({ message: SuccessfulUpload, resultId: x, inputFile: null });
     }).catch(() => {
       this.setState({ message: UnsuccessfulUpload, resultId: 0 });
     });
