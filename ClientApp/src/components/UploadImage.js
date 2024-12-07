@@ -21,7 +21,7 @@ const ReadyToUpload = (
       textAlign: 'center', // Centers text in case of multiline content
     }}
   >
-    <h2 style={{ margin: 0 }}>Upload Image</h2>
+    {/* <h2 style={{ margin: 0 }}>Upload Image</h2> */}
   </div>
 );
 
@@ -170,11 +170,14 @@ export class UploadImage extends Component {
       }
 
       return (
-        <div style={{display: "flex", gap: "10px"}}>
-          <button onClick={cameraChoice} className='cta-button'>Take a photo</button>
-          <button onClick={uploadChoice} className='cta-button'>Upload a file</button>
+        <div className="cta-container">
+          <h2>Upload Image</h2>
+          <button onClick={cameraChoice} className="cta-button">Take a Photo</button>
+          <button onClick={uploadChoice} className="cta-button">Upload a File</button>
         </div>
       );
+      
+      
     } else if(obj.state.modeInt === 1) {
       function capturePhoto() {
         const imageSrc = obj.webcamRef.current.getScreenshot();
