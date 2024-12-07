@@ -21,20 +21,17 @@ export class History extends Component {
     static displayImageArray(images) {
         // sort images
         images.sort((x, y) => {
-            const d1 = new Date(x.DateUploaded);
-            const d2 = new Date(y.DateUploaded);
-            if(d1 < d2) return 1;
-            else if(d1 > d2) return -1;
+            if(x.ResultId < y.ResultId) return 1;
+            else if(x.ResultId > y.ResultId) return -1;
             else return 0;
         });
 
         return (
             <div style={{display: "inline-block", maxHeight: "70vh", overflow: "scroll"}}>
                 { 
-                    images.map((image, i) => {
-                        i++;
+                    images.map((image) => {
                         return (
-                            <a key={i} href={`/result/${i}/false`} style={{color: "black"}}>
+                            <a key={`${image.ResultId}`} href={`/result/${image.ResultId}/false`} style={{color: "black"}}>
                                 <div className="hover" style={{display: "inline-block", border: "2px black solid", borderRadius: "16px", padding: "1%", marginBottom: "1em", marginRight: "1em"}}>
                                     <div style={{ marginBottom: "0.5em", display: "flex", alignItems: "center" }}>
                                         <span className="labels">Date Uploaded:</span>

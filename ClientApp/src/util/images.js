@@ -114,6 +114,7 @@ export async function getImageResult(id) {
     ans.LiquidAmount = result.LiquidAmount;
     ans.DateUploaded = result.DateUploaded;
     ans.CapturedBy = result.CapturedBy;
+    ans.ResultId = result.ResultId;
     return ans;
 }
 
