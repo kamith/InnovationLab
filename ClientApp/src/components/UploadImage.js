@@ -229,7 +229,6 @@ export class UploadImage extends Component {
             id='image'
             type='file'
             accept='image/*'
-            style={{ marginBottom: '10px' }}
           />
           {upload}
         </div>
