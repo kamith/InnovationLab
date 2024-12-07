@@ -18,25 +18,27 @@ const ReadyToUpload = (
       color: '#234b8d',
       padding: '10px',
       width: '100%',
-      textAlign: 'center', // Centers text in case of multiline content
+      textAlign: 'center',
     }}
-  >
-    {/* <h2 style={{ margin: 0 }}>Upload Image</h2> */}
-  </div>
+  ></div>
 );
 
-
-const SuccessfulUpload = <SuccessCard message={"Image uploaded successfully!"} />
-const UnsuccessfulUpload = <ErrorCard message={"Image upload failed..."} description={"Server error"} />
-const ImageTooLargeError = 
-                            <div style ={{display: 'flex', 
-                              justifyContent: 'center', 
-                              color: '#234b8d',
-                              alignItems: 'center', 
-                              width: '100%'}}>
-                              <h2>Upload an image</h2>
-                              <WarningCard message={"Image too large"} description={"Max image size 10 mb"} />
-                            </div>
+const SuccessfulUpload = <SuccessCard message={"Image uploaded successfully!"} />;
+const UnsuccessfulUpload = <ErrorCard message={"Image upload failed..."} description={"Server error"} />;
+const ImageTooLargeError = (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      color: '#234b8d',
+      alignItems: 'center',
+      width: '100%',
+    }}
+  >
+    <h2>Upload an image</h2>
+    <WarningCard message={"Image too large"} description={"Max image size 10 mb"} />
+  </div>
+);
 
 const ResultsButton = ({ id, isFromUpload }) => {
   const navigate = useNavigate();
@@ -45,27 +47,26 @@ const ResultsButton = ({ id, isFromUpload }) => {
     return navigate(`/result/${id}/${isFromUpload}`);
   }
 
-  // Only display if id is greater than 0
-  if(id <= 0) return <></>
+  if (id <= 0) return <></>;
 
   return (
-    <div style={{marginTop: '10px', display: "flex", flexDirection: "column"}}>
-    <button className='cta-button' onClick={handleClick}>View Result</button>
+    <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column' }}>
+      <button className='cta-button' onClick={handleClick}>View Result</button>
     </div>
   );
-}
+};
 
 export class UploadImage extends Component {
   static displayName = UploadImage.name;
 
   constructor(props) {
     super(props);
-    this.state = { 
-      message: ReadyToUpload, 
-      inputFile: null, 
+    this.state = {
+      message: ReadyToUpload,
+      inputFile: null,
       resultId: 0,
       modeInt: 0,
-      imageSrc: null
+      imageSrc: null,
     };
     this.webcamRef = React.createRef();
   }
@@ -73,9 +74,9 @@ export class UploadImage extends Component {
   render() {
     let message = this.state.message;
     let resultId = this.state.resultId;
-    let contents = <></>
+    let contents = <></>;
 
-    switch(message) {
+    switch (message) {
       case ReadyToUpload:
       case ImageTooLargeError:
         contents = UploadImage.renderUploadImage(this);
@@ -92,50 +93,46 @@ export class UploadImage extends Component {
 
     return (
       <div>
-        <div style={{width: "45%", margin: "auto"}}>
-          <div style={{ marginBottom: "5%" }}>
-            { message }
-          </div>
-          { contents }
-          <ResultsButton id={resultId} isFromUpload={true} />
+        <div style={{ width: '45%', margin: 'auto' }}>
+          <div style={{ marginBottom: '5%' }}>{message}</div>
+          {contents}
+          {/* <ResultsButton id={resultId} isFromUpload={true} /> */}
         </div>
       </div>
     );
   }
 
   handlePhoto = (imageSrc) => {
-    this.setState({ 
+    this.setState({
       showCamera: false,
       capturedImage: imageSrc,
-      inputFile: null  // Clear any previously selected file
+      inputFile: null,
     });
-  }
+  };
 
   resetForNewCapture = () => {
     this.setState({
       message: ReadyToUpload,
       inputFile: null,
       showCamera: true,
-      capturedImage: null
+      capturedImage: null,
     });
-  }
+  };
 
-  
   static renderUploadImage(obj) {
-
     function handleUploadClick() {
-      if(obj.state.inputFile == null) return;
+      if (obj.state.inputFile == null) return;
       const file = obj.state.inputFile;
-      if(file == null) return;
+      if (file == null) return;
 
-      if(obj.state.modeInt === 1) {
+      if (obj.state.modeInt === 1) {
         obj.handleUploadImage(file);
         return;
       }
-      
+
       const reader = new FileReader();
       reader.addEventListener(
-        "load",
+        'load',
         () => {
           obj.handleUploadImage(reader.result);
         },
@@ -146,9 +143,9 @@ export class UploadImage extends Component {
     }
 
     function handleInput(element) {
-      console.log("Inputting file...");
+      console.log('Inputting file...');
       const file = element.target.files[0];
-      if(file.size > MaxImageSize) {
+      if (file.size > MaxImageSize) {
         obj.setState({ message: ImageTooLargeError, inputFile: null });
       } else {
         obj.setState({ message: ReadyToUpload, inputFile: file });
@@ -159,131 +156,125 @@ export class UploadImage extends Component {
       obj.setState({ modeInt: 0, inputFile: null });
     }
 
-    if(obj.state.modeInt === 0) {
-      // haven't chosen file upload or camera
+    if (obj.state.modeInt === 0) {
       function cameraChoice() {
         obj.setState({ modeInt: 1 });
       }
 
       function uploadChoice() {
-        obj.setState({ modeInt: 2});
+        obj.setState({ modeInt: 2 });
       }
 
       return (
-        <div className="cta-container">
+        <div className='cta-container'>
           <h2>Upload Image</h2>
-          <button onClick={cameraChoice} className="cta-button">Take a Photo</button>
-          <button onClick={uploadChoice} className="cta-button">Upload a File</button>
+          <button onClick={cameraChoice} className='cta-button'>Take a Photo</button>
+          <button onClick={uploadChoice} className='cta-button'>Upload a File</button>
         </div>
       );
-      
-      
-    } else if(obj.state.modeInt === 1) {
+    } else if (obj.state.modeInt === 1) {
       function capturePhoto() {
         const imageSrc = obj.webcamRef.current.getScreenshot();
         obj.setState({ inputFile: imageSrc, imageSrc: imageSrc });
-        // getFileFromResponse(imageSrc).then(blob => {
-        //   const file = new File([blob], "image");
-        //   obj.setState({ inputFile: file, imageSrc: imageSrc });
-        // });
       }
 
       function retryPhoto() {
         obj.setState({ inputFile: null });
       }
 
-      // Camera is open
-      const capture = obj.state.inputFile === null
-                    ? <button onClick={capturePhoto} className='cta-button'>Capture</button>
-                    : <button className='cta-button' onClick={handleUploadClick}>Upload</button>
-
-      const retry = obj.state.inputFile === null
-                    ? <></>
-                    : <button onClick={retryPhoto} className='cta-button'>Retry</button>
-
-      if(obj.state.inputFile === null) {
+      if (obj.state.inputFile === null) {
         return (
-          <div >
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: "10%" }}>
-              <button onClick={handleGoBack} className='cta-button'>Go back</button>
-            </div> 
-                       
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-              <Webcam 
-                audio={false}
-                ref={obj.webcamRef}
-                screenshotFormat='image/jpeg'
-                mirrored={false}
-                style={{width: "150%"}}
-              />
-            </div>
-            <div style={{gap: "10px", display: "flex", justifyContent: "center"}} className='cta'>
-              { capture }
-              { retry }
+          <div className='cta-container'>
+            <button onClick={handleGoBack} className='cta-button'>Go back</button>
+            <Webcam
+              audio={false}
+              ref={obj.webcamRef}
+              screenshotFormat='image/jpeg'
+              mirrored={false}
+              style={{ width: '100%', borderRadius: '10px' }}
+            />
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button onClick={capturePhoto} className='cta-button'>Capture</button>
             </div>
           </div>
         );
       } else {
-        return(
-          <div>
-            <img src={obj.state.imageSrc} alt="Uploaded" />
-            <div style={{gap: "10px", display: "flex"}} className='cta'>
-              { capture }
-              { retry }
+        return (
+          <div className="cta-container" style={{ minHeight: 'auto' }}>
+            <img src={obj.state.imageSrc} alt="Uploaded" style={{ maxWidth: '100%', borderRadius: '10px', marginBottom: '20px' }} />
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button onClick={handleUploadClick} className="cta-button">Upload</button>
+              <button onClick={retryPhoto} className="cta-button">Retry</button>
             </div>
           </div>
         );
+        
       }
-    } else if(obj.state.modeInt === 2) {
-      // file upload mode
-      const upload = obj.state.inputFile !== null
-                    ? <button className='cta-button' onClick={handleUploadClick}>Upload</button>
-                    : <></>
+    } else if (obj.state.modeInt === 2) {
+      const upload = obj.state.inputFile !== null ? (
+        <button className='cta-button' onClick={handleUploadClick}>Upload</button>
+      ) : (
+        <></>
+      );
       return (
-        <div >
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-            <button onClick={handleGoBack} style={{ marginBottom: "10%" }} className='cta-button'>Go back</button>
-          </div>
-          
-          <input style={{ marginBottom: "10%" }} onInput={handleInput} id="image" type="file" accept="image/*" />
-          { upload }
+        <div className='cta-container'>
+          <button onClick={handleGoBack} className='cta-button'>Go back</button>
+          <input
+            onInput={handleInput}
+            id='image'
+            type='file'
+            accept='image/*'
+            style={{ marginBottom: '10px' }}
+          />
+          {upload}
         </div>
       );
     }
-  }  
+  }
 
   static renderSuccessfulUpload(obj) {
     function handleClick() {
-      obj.setState({ message: ReadyToUpload, inputFile: null,  modeInt: 0, resultId: 0 });
+      obj.setState({ message: ReadyToUpload, inputFile: null, modeInt: 0, resultId: 0 });
     }
-
+  
     return (
-      <div>
-        <button className='cta-button' onClick={handleClick}>Upload Again</button>
+      <div className='cta-container'>
+        <h2 style={{ textAlign: 'center' }}>Image uploaded successfully!</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', alignItems: 'center' }}>
+          <button className='cta-button' onClick={handleClick}>Upload Again</button>
+          <ResultsButton id={obj.state.resultId} isFromUpload={true} />
+        </div>
       </div>
     );
   }
-
+  
   static renderFailedUpload(obj) {
     function handleClick() {
       obj.setState({ message: ReadyToUpload, inputFile: null });
     }
-
+  
     return (
-      <div>
-        <button className='cta-button' onClick={handleClick}>Retry</button>
+      <div className='cta-container'>
+        <h2 style={{ textAlign: 'center' }}>Upload failed</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', alignItems: 'center' }}>
+          <button className='cta-button' onClick={handleClick}>Retry</button>
+          <ResultsButton id={obj.state.resultId} isFromUpload={true} />
+        </div>
       </div>
     );
   }
+  
 
-  // Could change this to redirect instead of staying on page for successful upload
   async handleUploadImage(img) {
     this.setState({ message: Loading });
-    uploadImage(img).then(x => {
-      if(x === -1) throw new Error();
-      this.setState({ message: SuccessfulUpload, resultId: x, inputFile: null });
-    }).catch(() => {
-      this.setState({ message: UnsuccessfulUpload, resultId: 0 });
-    });
+    uploadImage(img)
+      .then((x) => {
+        if (x === -1) throw new Error();
+        this.setState({ message: SuccessfulUpload, resultId: x, inputFile: null });
+      })
+      .catch(() => {
+        this.setState({ message: UnsuccessfulUpload, resultId: 0 });
+      });
   }
 }
+  
