@@ -201,10 +201,6 @@ export class UploadImage extends Component {
                     ? <></>
                     : <button onClick={retryPhoto} className='cta-button'>Retry</button>
 
-      const videoConstraints = {
-        facingMode: "environment"
-      };
-
       if(obj.state.inputFile === null) {
         return (
           <div >
