@@ -1,6 +1,8 @@
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Newtonsoft.Json;
+using WebApp.Models;
 
 namespace WebApp.Controllers.Lib;
 
@@ -77,6 +79,16 @@ public class BlobAccess
     public async Task<int> UploadFromStringAsync(string contents)
     {
         int resultIndex = (await GetLastFileIndex()) + 1;
+        BlobClient blobClient = _containerClient.GetBlobClient(GetBlobFileName(resultIndex));
+        await blobClient.UploadAsync(BinaryData.FromString(contents), overwrite: true);
+        return resultIndex;
+    }
+
+    public async Task<int> UploadFromImageResultAsync(ImageResult result)
+    {
+        int resultIndex = (await GetLastFileIndex()) + 1;
+        result.ResultId = resultIndex;
+        string contents = JsonConvert.SerializeObject(result);
         BlobClient blobClient = _containerClient.GetBlobClient(GetBlobFileName(resultIndex));
         await blobClient.UploadAsync(BinaryData.FromString(contents), overwrite: true);
         return resultIndex;

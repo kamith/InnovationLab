@@ -102,8 +102,10 @@ public class ImageController : ControllerBase
             Stream httpBody = HttpContext.Request.Body;
             string imageStr = await GetStringFromStream(httpBody);
             int resultMl = await GetResultFromAiApi(imageStr);
-            string json = CreateImageResultJson(imageStr, resultMl);
-            int resultNumber = await _blobAccess.UploadFromStringAsync(json);
+            // string json = CreateImageResultJson(imageStr, resultMl);
+            ImageResult result = new ImageResult() { CapturedBy=GenerateCapturedBy(), ImageData=imageStr, LiquidAmount=resultMl, DateUploaded=DateTime.Now.ToShortDateString() };
+            // int resultNumber = await _blobAccess.UploadFromStringAsync(json);
+            int resultNumber = await _blobAccess.UploadFromImageResultAsync(result);
             return Ok(resultNumber);
         } catch(Exception e) {
             Console.WriteLine(e.Message);
