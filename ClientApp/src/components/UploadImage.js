@@ -182,6 +182,10 @@ export class UploadImage extends Component {
         obj.setState({ inputFile: null });
       }
 
+      const videoConstraints = {
+        facingMode: "environment"
+      };
+
       if (obj.state.inputFile === null) {
         return (
           <div className='cta-container'>
@@ -192,6 +196,7 @@ export class UploadImage extends Component {
               screenshotFormat='image/jpeg'
               mirrored={false}
               style={{ width: '100%', borderRadius: '10px' }}
+              videoConstraints={{videoConstraints}}
             />
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <button onClick={capturePhoto} className='cta-button'>Capture</button>
