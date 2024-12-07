@@ -229,6 +229,7 @@ export class UploadImage extends Component {
             id='image'
             type='file'
             accept='image/*'
+            style={{width: "139%"}}
           />
           {upload}
         </div>

@@ -52,7 +52,7 @@ h2 {
   @media (max-width: 768px) {
     .cta-container {
       width: 95%; 
-      padding: 20px; 
+      padding: 30px; 
     }
   
     .cta-button {
